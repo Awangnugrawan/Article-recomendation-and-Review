@@ -51,117 +51,89 @@ rekomendasi artikel yang memberikan rekomendasi artikel berdasarkan preferensi p
 
 ### Variabel-variabel pada Articles sharing and reading from CI&T DeskDrop Kaggle Dataset adalah sebagai berikut:
 ####  Shared_articles
-    1. "timestamp"  memuat waktu pada saat suatu event terjadi, dan format UNIX timestamp digunakan untuk merepresentasikannya.
-    2. "EventType" adalah variabel yang mencatat jenis aktivitas yang terjadi dalam sistem ada dua jenis aktivitas yang tercatat, yaitu "CONTENT SHARED" dan "CONTENT           REMOVED".
-    3. "contentId" adalah identifikasi unik untuk suatu konten, seperti ID artikel.
-    4. "authorPersonId" adalah identifikasi unik untuk penulis suatu konten.
-    5. "authorSessionId" adalah identifikasi unik untuk sesi penulis pada saat event terjadi.
-    6. "authorUserAgent" adalah informasi mengenai perangkat atau browser yang digunakan oleh penulis saat event terjadi.
-    7. "authorRegion" adalah informasi mengenai wilayah geografis penulis.
-    8. "authorCountry" adalah informasi mengenai negara tempat tinggal penulis.
-    9. "contentType" menjelaskan jenis konten, seperti HTML, VIDEO, dan RICH.
-    10. "url" adalah URL untuk konten.
-    11. "title" adalah judul konten.
-    12. "text" adalah teks dari konten.
-    13. "lan" adalah informasi mengenai bahasa konten.
+
+1. "timestamp"  memuat waktu pada saat suatu event terjadi, dan format UNIX timestamp digunakan untuk merepresentasikannya.
+2. "EventType" adalah variabel yang mencatat jenis aktivitas yang terjadi dalam sistem ada dua jenis aktivitas yang tercatat, yaitu "CONTENT SHARED" dan "CONTENT REMOVED".
+3. "contentId" adalah identifikasi unik untuk suatu konten, seperti ID artikel.
+4. "authorPersonId" adalah identifikasi unik untuk penulis suatu konten.
+5. "authorSessionId" adalah identifikasi unik untuk sesi penulis pada saat event terjadi.
+6. "authorUserAgent" adalah informasi mengenai perangkat atau browser yang digunakan oleh penulis saat event terjadi.
+7. "authorRegion" adalah informasi mengenai wilayah geografis penulis.
+8. "authorCountry" adalah informasi mengenai negara tempat tinggal penulis.
+9. "contentType" menjelaskan jenis konten, seperti HTML, VIDEO, dan RICH.
+10. "url" adalah URL untuk konten.
+11. "title" adalah judul konten.
+12. "text" adalah teks dari konten.
+13. "lan" adalah informasi mengenai bahasa konten.
   
-- Users_interactions
-    1. "timestamp"  memuat waktu pada saat suatu event terjadi, dan format UNIX timestamp digunakan untuk merepresentasikannya.
-    2. "eventType" adalah variabel yang mencatat jenis aktivitas yang terjadi dalam 
-    sistem ada beberapa jenis aktivitas seperti VIEW, LIKE, COMMENT CREATED, DLL
-    3. "contentId" adalah identifikasi unik untuk suatu konten, seperti ID artikel.
-    4. "personId" merupakan identitas unik dari setiap pengguna. Variabel ini digunakan untuk mengidentifikasi setiap pengguna secara individual.
-    5. "sessionId" adalah identitas unik dari sesi aktivitas pengguna. Variabel ini digunakan untuk mengidentifikasi interaksi pengguna yang terkait dengan sesi            tertentu.
-    6. "userAgent" menyimpan informasi tentang perangkat dan browser yang digunakan oleh pengguna saat melakukan interaksi. Informasi ini dapat berisi nama perangkat,      sistem operasi, versi browser, dll.
-    7. "userRegion" menyimpan informasi tentang wilayah geografis dari pengguna. Ini dapat berisi informasi tentang negara atau provinsi dimana pengguna berada.
-    8. "userCountry" menyimpan informasi tentang negara dari pengguna. Ini digunakan untuk mengidentifikasi negara asal pengguna dan dapat digunakan untuk analisis        demografis.
+#### Users_interactions
+
+1. "timestamp"  memuat waktu pada saat suatu event terjadi, dan format UNIX timestamp digunakan untuk merepresentasikannya.
+2. "eventType" adalah variabel yang mencatat jenis aktivitas yang terjadi dalam 
+sistem ada beberapa jenis aktivitas seperti VIEW, LIKE, COMMENT CREATED, DLL
+3. "contentId" adalah identifikasi unik untuk suatu konten, seperti ID artikel.
+4. "personId" merupakan identitas unik dari setiap pengguna. Variabel ini digunakan untuk mengidentifikasi setiap pengguna secara individual.
+5. "sessionId" adalah identitas unik dari sesi aktivitas pengguna. Variabel ini digunakan untuk mengidentifikasi interaksi pengguna yang terkait dengan sesi            tertentu.
+6. "userAgent" menyimpan informasi tentang perangkat dan browser yang digunakan oleh pengguna saat melakukan interaksi. Informasi ini dapat berisi nama perangkat,      sistem operasi, versi browser, dll.
+7. "userRegion" menyimpan informasi tentang wilayah geografis dari pengguna. Ini dapat berisi informasi tentang negara atau provinsi dimana pengguna berada.
+8. "userCountry" menyimpan informasi tentang negara dari pengguna. Ini digunakan untuk mengidentifikasi negara asal pengguna dan dapat digunakan untuk analisis        demografis.
 
 ### Explorasi data analisis:
-- Jumlah baris:10683
-- Jumlah kolom : 11
+####  Shared_articles
+- Jumlah baris: 3122
+- Jumlah kolom : 13
 - Info dataset:
 
-|   NO	| Column         |Non-Null Count 	  |Dtype		   |
-|---	|---	              |---			            |---     		|
-|   1 	|Airline       	 |10683 non-null   	|object   	|
-|   2 	|Date_of_Journey |10683 non-null   	|object   	|
-|   3	|Source     	     |10683 non-null   	|object   	|
-|   4	|Destination	     |10683 non-null   	|object   	|
-|   5	|Route    	       |10682 non-null   	|object   	|
-|   6	|Dep_Time  	      |10683 non-null   	|object   	|
-|   7	|Arrival_Time 	   |10683 non-null   	|object   	|
-|   8	|Duration   	     |10683 non-null   	|object   	|
-|   9	|Total_Stops   	  |10682 non-null   	|object   	|
-|   10	| Additional_Info|10683 non-null   	|object   	|
-|   11	|Price    	      |10683 non-null   	|int64   	 |
+										
+
+|   NO	| Column            |Non-Null Count 	 |Dtype		   |
+|---	|---	                 |---			           |---     		|
+|   1 	|timestamp        	 |3122 non-null   	|int64    	|
+|   2 	|eventType          |3122 non-null    |object   	|
+|   3	|contentId     	     |3122 non-null   	|int64    	|
+|   4	|authorPersonId	     |3122 non-null   	|int64    	|
+|   5	|authorSessionId     |3122 non-null   	|int64    	|
+|   6	|authorUserAgent  	  |680 non-null   	 |object   	|
+|   7	|authorRegion 	      |680 non-null     |object   	|
+|   8	|authorCountry   	   |680 non-null     |object   	|
+|   9	|contentType  	      |3122 non-null    |object   	|
+|   10	|url                |3122 non-null    |object   	|
+|   11	|title    	         |3122 non-null   	|object  	 |
+|   12	|text    	          |3122 non-null   	|object  	 |
+|   13	|	lang    	         |3122 non-null   	|object  	 |
 
 
-Tabel 1. Info detail tiap kolom 
+Tabel 1. Info detail tiap kolom Shared_articles
 
-Pada tabel 1 terdiri atas 11 kolom dan sebagian besar tipe datanya adalah _object_
--	Nilai null = 
+Pada tabel 1 terdiri atas 13 kolom dan tipe datanya terdiri atas 9 _object_ dan 5 _int64_
 
+####  Users_interactions
+- Jumlah baris: 72312
+- Jumlah kolom : 8
+- Info dataset:
+										
 
-| Kolom          |jumlah nilai null	|
-|---	            |---		 	|
-|Airline  	      |0		  	 |
-|Date_of_Journey |0   			|
-|Source     	    |0   			|
-|Destination	    |0   			|
-|Route    	      |1   			|
-|Dep_Time  	     |0   			|
-|Arrival_Time 	  |0   			|
-|Duration   	    |0   			|
-|Total_Stops   	 |1   			|
-| Additional_Info|0   			|
-|Price    	      |0   			|
-
-Tabel 2. Jumlah nilai null tiap kolom
-
-Pada Tabel 2 kolom "Route" dam kolom "Total_Stops" masing-masing memiliki 1 nilai null
+|   NO	| Column            |Non-Null Count 	 |Dtype		   |
+|---	|---	                 |---			           |---     		|
+|   1 	|timestamp        	 |72312 non-null   	|int64    	|
+|   2 	|eventType          |72312 non-null    |object   	|
+|   3	|contentId     	     |72312 non-null   	|int64    	|
+|   4	|personId      	     |72312 non-null   	|int64    	|
+|   5	|sessionId           |72312 non-null   	|int64    	|
+|   6	|userAgent  	  |56918 non-null   	 |object   	|
+|   7	|userRegion 	      |56907 non-null     |object   	|
+|   8	|userCountry   	   |56918 non-null     |object   	|
 
 
-![Gambar Diagram Batang airplane](https://github.com/Awangnugrawan/Predictive-Analysis-and-Review/blob/main/bar_diagram.jpg)
-Gambar 1. Distribusi Airplane
 
+Tabel 2. Info detail tiap kolom Users_interactions
 
-Pada gambar 1 dari hasil visualisasi dengan menggunakan diagram batang pada atribut “Airline” dapat dilihat bahwa jenis maskapai penerbangan  yang paling banyak adalah Jet airways disusul dengan IndiGo kemudian AirIndia sedangkan maskapai penerbangan Visitera premium economy adalah maskapai yang paling sedikit.
-
+Pada tabel 2 terdiri atas 8 kolom dan tipe datanya terdiri atas 4 _object_ dan 4 _int64_
 
 
 ## Data Preparation
 Teknik yang digunakan pada notebook secara berurutan : 
--	Missing value
- Teknik yang pertama dilakukan adalah dengan mengecek nilai null pada dataset setelah menggunakan code “ df.isnull().sum()” di dapatkan bahwa terdapat 2 nilai null pada masing masing kolom route dan top_stops. Setelah itu dilakukan drop atribut yang tidak di perlukan seperti "Route" karena valuenya mirip dengan kolom Total Stops dan "Additional info" karena sebagian besar valuenya adalah no info.
-
--	Handling atribut “Date_of_Journey”:
-Selanjutnya adalah penanganan pada atribut tentang tanggal keberangkatan dari maskapai penerbangan. Value nya adalah dalam format dd/mm/yy , untuk mempermudah dalam modelling maka kita akan memisahkan nya menjadi tiap kolom menjadi kolom hari “Journey_days” dan kolom bulan “Journey_month” sedangkan untuk tahun tidak perlu karena semua value pada dataset ini sama yaitu tahun 2019. Dan setelah proses tersebut dilakukan maka kolom asal “Date_of_Journey” dapat di hapus/drop.
-
--	Handling atribut “Dep_Time”:
-Pada proses ini mirip dengan proses sebelumnya kita akan memisahkan value nya menjadi kolom menit “Dep_minute” dan kolom jam “Dep_Time”. Selanjutnya kita dapat melakukan drop pada kolom aslinya “Dep_Time”
-
--	Handling atribut “Arrival_time”:
-Atribut ini tentang waktu keberangkatan juga dapat dipisahkan menjadi waktu keberangkatan dalam menit “Arrival_Minute” dan keberangkatan dalam jam “Arrival_hour”. Kemudian kolom asalnya di hapus
-
--	Handling atribut “Duration”:
-Sama seperti proses sebelumnya pada kolom ini kita juga akan memisahkan nya menjadi durasi dalam menit “Duration_mins” dan Durasi dalam jam “Duration_hour”. Seperti biasa kolom asalnya dapat di drop
-
--	Handling atribut “Total_stops”:
-Pada atribut ini terdapat 5 value utama yang dapat dilakukan label encoding dengan nilai 0-4
-
--	Handling Atribut “Airplane”:
-Berbeda dengan atribut-atribuk numerik sebelumnya, pada kolom akan dilakukan penyederhanaan atau penggabungan value. Untuk value yang di gabung adalah value yang memiliki jumlah sedikit seperti 'Trujet','Vistara Premium economy','Jet Airways Business','Multiple carriers Premium economy' maka akan di gabung menjadi satu value yaitu “Other”. Setelah itu kita simpan dalam variabel dataframe Airline dan melakukan OneHotEncoding pada tiap variabel
-
--	Handling atribut “Source”:
-Pada atribut ini dapat kita simpan dalam variabel dataframe Source dan melakukan OneHotEncoding pada tiap variabel
-
--	Handling atribut “Destination”
-Sama seperti atribut Airline, kita juga dapat melakukan penyederhanaan / penggabungan value yang memilki makna yang sama yaitu “New Delhi” dan “Delhi” sehingga dapat di satukan menjadi “Delhi”. Selanjutnya dapat kita simpan dalam variabel dataframe Destination dan melakukan OneHotEncoding pada tiap variabel.
-
--	Concenate dataframe Airline,Source, dan Destination:
-Penyatuan 3 atribut catagorik yang telah dilakukan teknik One hot encoding pada tiap variabelnya ke dataframe utama “df”.
-
-
+- 
 
 ## Modeling
 Pada dataset ini menggunakan 3 modelling yaitu :
