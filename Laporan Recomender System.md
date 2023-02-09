@@ -138,7 +138,6 @@ Teknik yang digunakan pada notebook secara berurutan :
 
 Terdapat 5 jenis interaksi, selanjutnya adalah dengan memberikan bobot tergantung pada jenis interaksinya
 Memmbuat dictionary untuk menampung masing-masing bobot eventType:
-
 	- 'COMMENT CREATED': 5
 	- 'FOLLOW': 4
 	- 'BOOKMARK': 3
@@ -156,8 +155,8 @@ Agar distribusi interaksi antara pengguna dan item tidak terlalu ekstrem atau ti
 
 
 
-## Modeling
-Pada dataset ini menggunakan 2 modelling yaitu :
+## Modeling and RESULT
+###Pada dataset ini menggunakan 2 modelling yaitu :
 1. Content Based Filtering
 
 Kelebihan content-based filtering:
@@ -193,6 +192,27 @@ Kekurangan Collaborative Filtering:
 
 Implementasi dari collaborative filtering (CF) recommendation model. Dalam `class CFRecommender`, ada dua atribut yaitu `cf_predictions_df` dan `items_df` yang diambil dari inputan saat inisiasi. Kemudian, ada method `recommend_items` yang akan meng-return rekomendasi item bagi suatu user. Prosesnya adalah dengan mengambil data dari `cf_predictions_df` berdasarkan `user_id` dan mengurutkan nilai prediksi `(recStrength)` dari tertinggi ke terendah. Lalu, data dalam rekomendasi akan di-filter dengan menghilangkan item yang diinginkan untuk dihindari. Terakhir, jika verbose bernilai True, maka akan diteruskan informasi detail dari item seperti judul dan URL.
  
+### Menyajikan top-N recommendation
+Untuk menampilkan Top 10 rekomendasi dari jenis artikel menggunakan code `myprofile = user_profiles[-1479311724257856983]` yang dimana personidny adalah "-1479311724257856983" maka ini adalah daftar top 10 rekomendasi yang ditampilkan:
+
+|token	|relevance|
+|---	|---	  |
+|learning|	0.310274|
+|machine learning|	0.265817|
+|machine	|0.254153|
+|google	|0.222535|
+|data	|0.168911|
+|ai	|0.125121|
+|graph	|0.115408|
+|algorithms|	0.101523|
+|like	|0.097832|
+|language|	0.086522|
+
+Tabel 3. Top 10 recomendation Artikel
+
+Pada tabel 3 menampilkan top 10 rekomendasi artikel dari salah satu user dimana rekomendasinya seputar algoritma Machine Learning 
+ 
+ 
 ## Evaluation
 Pada tahap evaluasi digunakan Top-N accuracy metrics yang digunakan yaitu:
 
@@ -217,9 +237,9 @@ Output pada global_metrics:
 |63	|41		|54			|134				|0.305970	|0.402985	|-2626634673110551643|
 |16	|18		|37			|130				|0.138462	|0.284615	|-1032019229384696495|
 
-Tabel 3. global_metric Content Based Filtering
+Tabel 4. global_metric Content Based Filtering
 
-Pada tabel 3 di tampilkan beberapa sampel untuk membandingkan atribut- atribut dari _global metric_ terhadap user dengan menggunakan model _Content Based Filtering_
+Pada tabel 4 di tampilkan beberapa sampel untuk membandingkan atribut- atribut dari _global metric_ terhadap user dengan menggunakan model _Content Based Filtering_
 
 #### Colaboratorive Filtering
 
@@ -229,9 +249,9 @@ Pada tabel 3 di tampilkan beberapa sampel untuk membandingkan atribut- atribut d
 |63	|16		|35			|134				|0.119403	|0.261194	|-2626634673110551643|
 |16	|23		|41			|130				|0.176923	|0.315385	|-1032019229384696495|
 
-Tabel 4. global_metric Colaborative Filtering
+Tabel 5. global_metric Colaborative Filtering
 
-Pada tabel 4 dengan menggunakan model _Colaborative Filtering_ di tampilkan beberapa sampel untuk membandingkan atribut - atribut dari _global metric_ terhadap user 
+Pada tabel 5 dengan menggunakan model _Colaborative Filtering_ di tampilkan beberapa sampel untuk membandingkan atribut - atribut dari _global metric_ terhadap user 
 
 #### Perbandingan Content Based Filtering dan Colaborative Filtering
 
@@ -240,9 +260,9 @@ Pada tabel 4 dengan menggunakan model _Colaborative Filtering_ di tampilkan bebe
 |Content-Based  	|0.215506  	|0.345072  	|
 |Collaborative Filtering|0.397766   	|0.551248  	|
 
-Tabel 5. Perbandingan 2 model
+Tabel 6. Perbandingan 2 model
 
-Pada tabel 5 berdasarkan hasil perbandingan tersebut model Content Based Filtering menghasilkan recall yang lebih rendah pada recall_at_7 dan recall_at_15 
+Pada tabel 6 berdasarkan hasil perbandingan tersebut model Content Based Filtering menghasilkan recall yang lebih rendah pada recall_at_7 dan recall_at_15 
 
 ![plot CBF DAN CF](https://raw.githubusercontent.com/Awangnugrawan/Article-recomendation-and-Review/main/plot%20CBF%20dan%20CF.jpg)
 
