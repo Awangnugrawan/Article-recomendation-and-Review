@@ -152,6 +152,10 @@ User cold-start adalah masalah yang sering dialami oleh sistem rekomendasi, di m
 
 Agar distribusi interaksi antara pengguna dan item tidak terlalu ekstrem atau tidak terlalu bias, maka dilakukan transformasi logaritma dengan mengaplikasikan fungsi "smooth_user_preference". Transformasi ini bertujuan untuk memperhalus distribusi interaksi dan membuatnya lebih stabil sehingga lebih mudah dianalisis dan diterapkan pada sistem rekomendasi.
 
+- Split data
+
+Data training digunakan untuk melatih model, sedangkan data testing digunakan untuk mengevaluasi model yang sudah dilatih. Data set `interactions_full_df` akan dibagi menjadi `interactions_train` sebesar 80% dan `interactions_test` sebesar 20%. `Stratify=interactions_full_df['personId']` mengatakan bahwa pembagian data harus dilakukan dengan proporsi yang sama dari setiap kelas dalam kolom "personId".Test_size=0.20 mengatakan bahwa 20% dari data set akan digunakan sebagai data testing.Random_state=42 adalah seed yang digunakan oleh fungsi random untuk memastikan bahwa hasil yang diperoleh selalu sama setiap kali dilakukan pembagian data.
+
 
 
 
@@ -193,24 +197,46 @@ Kekurangan Collaborative Filtering:
 Implementasi dari collaborative filtering (CF) recommendation model. Dalam `class CFRecommender`, ada dua atribut yaitu `cf_predictions_df` dan `items_df` yang diambil dari inputan saat inisiasi. Kemudian, ada method `recommend_items` yang akan meng-return rekomendasi item bagi suatu user. Prosesnya adalah dengan mengambil data dari `cf_predictions_df` berdasarkan `user_id` dan mengurutkan nilai prediksi `(recStrength)` dari tertinggi ke terendah. Lalu, data dalam rekomendasi akan di-filter dengan menghilangkan item yang diinginkan untuk dihindari. Terakhir, jika verbose bernilai True, maka akan diteruskan informasi detail dari item seperti judul dan URL.
  
 ### Menyajikan top-N recommendation
-Untuk menampilkan Top 10 rekomendasi dari jenis artikel menggunakan code `myprofile = user_profiles[-1479311724257856983]` yang dimana personidny adalah "-1479311724257856983" maka ini adalah daftar top 10 rekomendasi yang ditampilkan:
+#### Content Based Filtering
 
-|token	|relevance|
-|---	|---	  |
-|learning|	0.310274|
-|machine learning|	0.265817|
-|machine	|0.254153|
-|google	|0.222535|
-|data	|0.168911|
-|ai	|0.125121|
-|graph	|0.115408|
-|algorithms|	0.101523|
-|like	|0.097832|
-|language|	0.086522|
 
-Tabel 3. Top 10 recomendation Artikel
+| recStrength| contentId            |title 	 |url	   |lang|
+|---	|---	                 |---		|---     |   ---     |
+|0.693135|	5250363310227021277|	How Google is Remaking Itself as a "Machine Le...|	https://backchannel.com/how-google-is-remaking...|	en|
+|0.689209|	-7126520323752764957|	How Google is Remaking Itself as a "Machine Le...|	https://backchannel.com/how-google-is-remaking...|	en|
+|0.617085|	638282658987724754|	Machine Learning for Designers			|	https://www.oreilly.com/learning/machine-learn...|	en|
+|0.583306|	5258604889412591249|	Machine Learning Is No Longer Just for Experts	|	https://hbr.org/2016/10/machine-learning-is-no...|	en|
+|0.579381|	-8068727428160395745|	How real businesses are using machine learning	|	https://techcrunch.com/2016/03/19/how-real-bus...|	en|
+|0.567638|	2220561310072186802|	5 Skills You Need to Become a Machine Learning...|	http://blog.udacity.com/2016/04/5-skills-you-n...|	en|
+|0.556181|	-229081393244987789|	Building AI Is Hard-So Facebook Is Building AI...|	http://www.wired.com/2016/05/facebook-trying-c...|	en|
+|0.551451|	-4571929941432664145|	Machine Learning as a Service: How Data Scienc...|	http://www.huffingtonpost.com/laura-dambrosio/...|	en|
+|0.550014|	-9033211547111606164|	Google's Cloud Machine Learning service is now...|	https://techcrunch.com/2016/09/29/googles-clou...|	en|
+|0.546016|	54678605145828343  |Is machine learning the next commodity?		|	http://readwrite.com/2016/04/18/machine-learni...|	en|
+				
 
-Pada tabel 3 menampilkan top 10 rekomendasi artikel dari salah satu user dimana rekomendasinya seputar algoritma Machine Learning 
+Tabel 3. Top 10 recomendation Artikel by Content Based Filtering 
+
+Pada tabel 3 menampilkan top 10 rekomendasi artikel dari salah satu user dimana rekomendasinya seputar algoritma Machine Learning dengan model _Content Based Filtering_
+
+#### Colaborative Filtering
+
+| recStrength| contentId            |title 	 |url	   |lang|
+|---	|---	                 |---		|---     |   ---     |
+|0.315666|	-8190931845319543363|	Machine Learning Is At The Very Peak Of Its Hy...|	https://arc.applause.com/2016/08/17/gartner-hy...|	en|
+|0.309676|	2468005329717107277|	How Netflix does A/B Testing - uxdesign.cc - U...|	https://uxdesign.cc/how-netflix-does-a-b-testi...|	en|
+|0.300454|	7507067965574797372|	Um bilhão de arquivos mostram quem vence a dis...|	http://gizmodo.uol.com.br/disputa-tabs-vs-espa...|	pt|
+|0.300092|	-6467708104873171151|	5 reasons your employees aren't sharing their ...|	http://justcuriousblog.com/2016/04/5-reasons-y...|	en|
+|0.294277|	4118743389464105405|	Why Google App Engine rocks: A Google engineer...|	https://cloudplatform.googleblog.com/2016/04/w...|	en|
+|0.292926|	2589533162305407436|	6 reasons why I like KeystoneML			 |	http://radar.oreilly.com/2015/07/6-reasons-why...|	en|
+|0.291189|	7395435905985567130|	The AI business landscape			 |	https://www.oreilly.com/ideas/the-ai-business-...|	en|
+|0.289656|	-9033211547111606164|	Google's Cloud Machine Learning service is now...|	https://techcrunch.com/2016/09/29/googles-clou...|	en|
+|0.289142|	5258604889412591249|	Machine Learning Is No Longer Just for Experts	 |	https://hbr.org/2016/10/machine-learning-is-no...|	en|
+|0.287894|	-5756697018315640725|	Being A Developer After 40 - Free Code Camp	 |	https://medium.freecodecamp.com/being-a-develo...|	en|
+
+Tabel 4. Top 10 recomendation Artikel by Colaborative Filtering
+
+Pada tabel 4 menampilkan top 10 rekomendasi artikel dari salah satu user dimana rekomendasinya seputar algoritma Machine Learning dengan model _Colaborative Filtering_
+
  
  
 ## Evaluation
@@ -237,9 +263,9 @@ Output pada global_metrics:
 |63	|41		|54			|134				|0.305970	|0.402985	|-2626634673110551643|
 |16	|18		|37			|130				|0.138462	|0.284615	|-1032019229384696495|
 
-Tabel 4. global_metric Content Based Filtering
+Tabel 5. global_metric Content Based Filtering
 
-Pada tabel 4 di tampilkan beberapa sampel untuk membandingkan atribut- atribut dari _global metric_ terhadap user dengan menggunakan model _Content Based Filtering_
+Pada tabel 5 di tampilkan beberapa sampel untuk membandingkan atribut- atribut dari _global metric_ terhadap user dengan menggunakan model _Content Based Filtering_
 
 #### Colaboratorive Filtering
 
@@ -249,9 +275,9 @@ Pada tabel 4 di tampilkan beberapa sampel untuk membandingkan atribut- atribut d
 |63	|16		|35			|134				|0.119403	|0.261194	|-2626634673110551643|
 |16	|23		|41			|130				|0.176923	|0.315385	|-1032019229384696495|
 
-Tabel 5. global_metric Colaborative Filtering
+Tabel 6. global_metric Colaborative Filtering
 
-Pada tabel 5 dengan menggunakan model _Colaborative Filtering_ di tampilkan beberapa sampel untuk membandingkan atribut - atribut dari _global metric_ terhadap user 
+Pada tabel 6 dengan menggunakan model _Colaborative Filtering_ di tampilkan beberapa sampel untuk membandingkan atribut - atribut dari _global metric_ terhadap user 
 
 #### Perbandingan Content Based Filtering dan Colaborative Filtering
 
@@ -260,9 +286,9 @@ Pada tabel 5 dengan menggunakan model _Colaborative Filtering_ di tampilkan bebe
 |Content-Based  	|0.215506  	|0.345072  	|
 |Collaborative Filtering|0.397766   	|0.551248  	|
 
-Tabel 6. Perbandingan 2 model
+Tabel 7. Perbandingan 2 model
 
-Pada tabel 6 berdasarkan hasil perbandingan tersebut model Content Based Filtering menghasilkan recall yang lebih rendah pada recall_at_7 dan recall_at_15 
+Pada tabel 7 berdasarkan hasil perbandingan tersebut model Content Based Filtering menghasilkan recall yang lebih rendah pada recall_at_7 dan recall_at_15 
 
 ![plot CBF DAN CF](https://raw.githubusercontent.com/Awangnugrawan/Article-recomendation-and-Review/main/plot%20CBF%20dan%20CF.jpg)
 
