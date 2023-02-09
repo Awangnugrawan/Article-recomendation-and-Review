@@ -156,7 +156,7 @@ Agar distribusi interaksi antara pengguna dan item tidak terlalu ekstrem atau ti
 
 
 ## Modeling and RESULT
-###Pada dataset ini menggunakan 2 modelling yaitu :
+### Pada dataset ini menggunakan 2 modelling yaitu :
 1. Content Based Filtering
 
 Kelebihan content-based filtering:
