@@ -133,165 +133,125 @@ Pada tabel 2 terdiri atas 8 kolom dan tipe datanya terdiri atas 4 _object_ dan 4
 
 ## Data Preparation
 Teknik yang digunakan pada notebook secara berurutan : 
-- 
+- Handling eventType "user_interaction" 
+
+Terdapat 5 jenis interaksi, selanjutnya adalah dengan memberikan bobot tergantung pada jenis interaksinya
+Memmbuat dictionary untuk menampung masing-masing bobot eventType:
+	- 'COMMENT CREATED': 5
+	- 'FOLLOW': 4
+	- 'BOOKMARK': 3
+	- 'LIKE': 2
+	- 'VIEW': 1
+	
+- Handling User cold-star
+
+User cold-start adalah masalah yang sering dialami oleh sistem rekomendasi, di mana sulit untuk memberikan rekomendasi yang dipersonalisasi untuk pengguna yang tidak memiliki atau hanya memiliki sedikit item yang dikonsumsi. Hal ini disebabkan karena kurangnya informasi untuk memodelkan preferensi mereka. Untuk mengatasi masalah ini, dataset hanya mempertahankan pengguna dengan setidaknya 7 interaksi, karena dengan begitu lebih banyak informasi tersedia untuk memodelkan preferensi pengguna dan memberikan rekomendasi yang lebih baik.
+
+- Smooth_user_preference
+
+Agar distribusi interaksi antara pengguna dan item tidak terlalu ekstrem atau tidak terlalu bias, maka dilakukan transformasi logaritma dengan mengaplikasikan fungsi "smooth_user_preference". Transformasi ini bertujuan untuk memperhalus distribusi interaksi dan membuatnya lebih stabil sehingga lebih mudah dianalisis dan diterapkan pada sistem rekomendasi.
+
+
+
 
 ## Modeling
-Pada dataset ini menggunakan 3 modelling yaitu :
-1. KNeighborsRegressor 
+Pada dataset ini menggunakan 2 modelling yaitu :
+1. Content Based Filtering
 
-Kelebihan:
--	Mudah diimplementasikan: KNeighborsRegressor sangat mudah diimplementasikan dan bisa digunakan hanya dengan beberapa baris kode.
--	Menangani data yang hilang: KNeighborsRegressor bisa menangani data yang hilang tanpa memerlukan imputasi apa pun.
--	Berfungsi dengan baik pada dataset kecil: KNeighborsRegressor berfungsi dengan baik pada dataset kecil dan merupakan pilihan yang baik saat data yang tersedia terbatas.
+Kelebihan content-based filtering:
 
-Kekurangan:
--	Sensitif terhadap fitur yang tidak relevan: KNeighborsRegressor sensitif terhadap fitur yang tidak relevan dan bisa terpengaruh oleh adanya fitur bising atau berlebihan dalam data.
--	Mahal secara komputasional: KNeighborsRegressor bisa mahal secara komputasional saat jumlah titik data besar, karena algoritma harus menghitung jarak antara semua titik data.
--	Kinerja tergantung pada pilihan k: Kinerja KNeighborsRegressor tergantung pada pilihan k, jumlah tetangga terdekat untuk dipertimbangkan, yang bisa sulit ditentukan.
+- Personalisasi: Algoritme ini dapat memberikan rekomendasi berdasarkan preferensi pengguna, sehingga memberikan hasil yang lebih sesuai dengan kebutuhan dan minat mereka.
+- Mudah dipahami: Content-based filtering menggunakan deskripsi konten dari item seperti genre, deskripsi, dan tag, sehingga mudah dipahami dan diterapkan.
+- Ketergantungan pada data: Algoritme ini tidak terlalu bergantung pada data dari pengguna lain, sehingga hasil rekomendasi bisa tetap stabil meski tidak ada banyak data interaksi pengguna.
 
-Kode `knn = KNeighborsRegressor(n_neighbors=3)` ini digunakan untuk membuat objek model K-Nearest Neighbor Regression (KNN). Pada baris ini, parameter `n_neighbors=3` digunakan untuk menentukan jumlah tetangga terdekat (K) yang akan digunakan dalam memprediksi tarif penerbangan. Artinya, dalam hal ini, 3 tetangga terdekat dalam data historis akan digunakan untuk memprediksi tarif penerbangan.
+Kekurangan content-based filtering:
 
-Kode `knn.fit(X_train, y_train)` digunakan untuk melatih model KNN dengan data latih (X_train, y_train). X_train adalah data fitur yang digunakan untuk memprediksi tarif penerbangan, sedangkan y_train adalah data target (tarif penerbangan) yang akan diprediksi oleh model. Setelah melatih model, model KNN akan mempelajari hubungan antara fitur-fitur dan tarif penerbangan dan siap untuk memprediksi tarif penerbangan baru.
+- Bias terhadap item yang dikenal: Algoritme ini akan memberikan rekomendasi yang lebih baik pada item yang sering dikenal oleh pengguna, sehingga item baru dan unik mungkin tidak terdeteksi.
+- Terbatas pada preferensi saat ini: Content-based filtering hanya mempertimbangkan preferensi saat ini dari pengguna, sehingga bisa terbatas pada item yang sesuai dengan preferensi saat ini saja.
+- Kurangnya rekomendasi baru: Karena fokus pada preferensi saat ini, rekomendasi yang diberikan mungkin terbatas dan kurang bervariasi.
 
-2. Random Forest Regressor
+Implementasi dari model content-based filtering untuk sistem rekomendasi artikel dilakukan dengan membuat  `Class ContentBasedRecommender` memiliki beberapa method yang membantu mengimplementasikan model ini. Method `get_model_name` mengembalikan nama model yang digunakan. Method `_get_similar_items_to_user_profile` menghitung kemiripan antara profil pengguna dengan semua profil item menggunakan cosine similarity. Method `recommend_items` menyarankan item yang paling mirip dengan profil pengguna. Recommendations_df adalah dataframe yang menyimpan rekomendasi item yang diterima dari method `_get_similar_items_to_user_profile`.
 
-Kelebihan:
--	Bisa menangani hubungan non-linier: Random Forest Regressor bisa menangani hubungan non-linier antara fitur dan variabel target, membuatnya pilihan yang baik untuk dataset yang kompleks.
--	Tahan terhadap outliers: Random Forest Regressor tahan terhadap outliers dan tidak membuat asumsi yang kuat tentang distribusi data.
--	Mengurangi overfitting: Dengan mengambil rata-rata prediksi dari banyak pohon keputusan, Random Forest Regressor mengurangi overfitting, yang merupakan masalah umum pada algoritma pohon keputusan.
+2. Colaboratative Filtering
 
+Kelebihan Collaborative Filtering:
 
-Kekurangan:
--	Mahal secara komputasional: Random Forest Regressor bisa mahal secara komputasional, terutama saat jumlah pohon besar atau saat jumlah fitur tinggi.
--	Rawan overfitting: Meskipun Random Forest Regressor kurang rawan overfitting dibandingkan pohon keputusan, ia masih bisa overfitting jika jumlah pohon terlalu besar atau jika kedalaman pohon terlalu dalam.
--	Sulit diterjemahkan: Berbeda dengan model regresi linier sederhana, prediksi Random Forest Regressor sulit diterjemahkan, karena berdasarkan pada kombinasi dari banyak pohon keputusan.
-
-Kode `RF = RandomForestRegressor(n_estimators=50, max_depth=16, random_state=55, n_jobs=-1)` ini digunakan untuk membuat objek model Random Forest Regression. Pada baris ini, parameter `n_estimators=50` digunakan untuk menentukan jumlah pohon yang akan dibangun dalam model Random Forest. Parameter `max_depth=16` digunakan untuk menentukan kedalaman maksimal pohon dalam model. Parameter `random_state=55` digunakan untuk memastikan hasil reproduksi model Random Forest. Dan `Parameter n_jobs=-1` digunakan untuk menentukan jumlah kerja paralel yang akan digunakan dalam melatih model.
-
-Kode `RF.fit(X_train, y_train)` digunakan untuk melatih model Random Forest Regression dengan data latih (X_train, y_train). X_train adalah data fitur yang digunakan untuk memprediksi tarif penerbangan, sedangkan y_train adalah data target (tarif penerbangan) yang akan diprediksi oleh model. Setelah melatih model, model Random Forest akan mempelajari hubungan antara fitur-fitur dan tarif penerbangan dan siap untuk memprediksi tarif penerbangan baru.
-
-3. Decision Tree Regressor
-
-Kelebihan 
--	Mudah dipahami dan diimplementasikan: Decision Tree Regressor memiliki representasi visual yang mudah dipahami, sehingga memudahkan interpretasi hasil dan membuat model ini mudah dipahami oleh stakeholder.
--	Dapat menangani fitur numerik dan kategorikal: Decision Tree Regressor dapat menangani fitur numerik dan kategorikal dengan baik, sehingga dapat digunakan untuk berbagai jenis data.
--	Dapat menangani outliers dan non-linearitas: Decision Tree Regressor memiliki kemampuan membagi data secara berulang-ulang sehingga dapat menangani outlier dan non-linearitas dalam data.
+- Collaborative Filtering memiliki tingkat akurasi yang tinggi karena menggunakan data interaksi sebelumnya dari banyak pengguna untuk membuat rekomendasi.
+- Collaborative Filtering bekerja dengan baik pada kasus dengan banyak data interaksi pengguna.
+- Dapat membuat rekomendasi individual yang lebih tepat karena mempertimbangkan preferensi spesifik pengguna.
 
 
-Kekurangan :
--	Mudah overfitting: Decision Tree Regressor memiliki kecenderungan untuk overfitting jika depth-nya terlalu dalam. Ini dapat diatasi dengan teknik seperti pemotongan pohon, tetapi membutuhkan pemahaman yang baik dari model dan dataset.
--	Instabilitas: Decision Tree Regressor sangat sensitif terhadap perubahan kecil pada data, sehingga model yang dibangun dengan dataset yang berbeda mungkin sangat berbeda.
--	Bias terhadap fitur yang memiliki banyak data: Decision Tree Regressor cenderung memprioritaskan fitur yang memiliki banyak data dalam membuat pembagian data.
+Kekurangan Collaborative Filtering:
 
-Kode `DTR= DecisionTreeRegressor(max_depth=20, random_state=3)` ini digunakan untuk membuat objek model Decision Tree Regression. Pada baris ini, parameter `max_depth=20` digunakan untuk menentukan kedalaman maksimal pohon dalam model.Dan parameter `random_state=3` digunakan untuk memastikan hasil reproduksi model Decision Tree.
+- Ketergantungan pada data interaksi pengguna. Jika tidak ada interaksi pengguna yang cukup, Collaborative Filtering tidak akan bekerja dengan baik.
+- Kecenderungan untuk mengikuti tren populer daripada menemukan item unik dan menarik.
+- Kecenderungan untuk membuat rekomendasi yang mirip dengan yang sudah dikenal oleh pengguna.
+- Kecenderungan untuk membuat rekomendasi yang sesuai dengan mayoritas pengguna dan mengabaikan preferensi individu.
+- Bias terhadap item yang paling sering direkomendasikan karena lebih banyak data interaksi untuk item tersebut.
 
-Kode `DTR.fit(X_train, y_train)` digunakan untuk melatih model Decision Tree Regression dengan data latih (X_train, y_train). X_train adalah data fitur yang digunakan untuk memprediksi tarif penerbangan, sedangkan y_train adalah data target (tarif penerbangan) yang akan diprediksi oleh model. Setelah melatih model, model Decision Tree akan mempelajari hubungan antara fitur-fitur dan tarif penerbangan dan siap untuk memprediksi tarif penerbangan baru.
-
+Implementasi dari collaborative filtering (CF) recommendation model. Dalam `class CFRecommender`, ada dua atribut yaitu `cf_predictions_df` dan `items_df` yang diambil dari inputan saat inisiasi. Kemudian, ada method `recommend_items` yang akan meng-return rekomendasi item bagi suatu user. Prosesnya adalah dengan mengambil data dari `cf_predictions_df` berdasarkan `user_id` dan mengurutkan nilai prediksi `(recStrength)` dari tertinggi ke terendah. Lalu, data dalam rekomendasi akan di-filter dengan menghilangkan item yang diinginkan untuk dihindari. Terakhir, jika verbose bernilai True, maka akan diteruskan informasi detail dari item seperti judul dan URL.
+ 
 ## Evaluation
-Pada tahap evaluasi digunakan tiga metrik evaluasi yang digunakan yaitu:
+Pada tahap evaluasi digunakan Top-N accuracy metrics yang digunakan yaitu:
 
-1. R2_Score
+Top-N accuracy metrics adalah metrik yang digunakan untuk mengukur akurasi dalam rekomendasi artikel. Ini mengukur seberapa baik sistem rekomendasi dalam memprediksi item yang akan disukai oleh pengguna. Top-N accuracy mengacu pada presentasi item yang direkomendasikan dan benar-benar diterima oleh pengguna dalam daftar rekomendasi N teratas. Misalnya, jika sistem memrekomendasikan 10 artikel dan 5 dari mereka benar-benar diterima oleh pengguna, maka Top-5 accuracy-nya adalah 50%. Semakin tinggi nilai Top-N accuracy, semakin baik kinerja sistem rekomendasi.
 
-R2 Score adalah metrik yang digunakan untuk mengukur seberapa baik model regresi memprediksi target. 
-Formula R2 Score adalah:
+Selanjutnya adalah Melakukan index dengan kolom personId. Tujuannya adalah untuk mempercepat pencarian saat melakukan evaluasi. Setelah di-index, kolom personId menjadi indeks dalam data frame dan memungkinkan pencarian yang lebih cepat terhadap baris tertentu dalam data frame berdasarkan nilai dari personId.
 
-$$ R2 = {1 - {SSres \over SStot}} $$
+Implementasi dari Top-N accuracy metrics untuk melakukan evaluasi pada sebuah model rekomendasi artikel dengan menerapkan `class ModelEvaluator` digunakan untuk melakukan evaluasi pada model. Fungsi `get_not_interacted_items_sample` digunakan untuk mengambil sample dari item yang belum pernah diterima oleh pengguna sebanyak `EVAL_RANDOM_SAMPLE_NON_INTERACTED_ITEMS (100 item)`. Fungsi `_verify_hit_top_n` digunakan untuk memastikan apakah item yang diterima pengguna berada dalam daftar rekomendasi Top-N. Fungsi `evaluate_model_for_user` digunakan untuk mengevaluasi model untuk seorang pengguna tertentu. Dalam fungsi ini, model di-rekomendasikan untuk membuat daftar rekomendasi untuk pengguna tertentu, dan kemudian di-filter untuk hanya menyertakan item yang diterima pengguna dan item acak yang belum diterima. Kemudian, dengan menggunakan `_verify_hit_top_n`, diperiksa apakah item yang diterima pengguna berada dalam daftar rekomendasi Top-N. Jika ya, hit_count ditingkatkan dan pemrosesan berlanjut ke item berikutnya. Setelah seluruh item diterima pengguna diterima, `hit_count` akan digunakan untuk menghitung Top-N accuracy.
 
-Ket:
-- SSres adalah sum of squared residuals, yaitu jumlah kuadrat selisih antara nilai target aktual dan nilai target prediksi.
-- SStot adalah total sum of squares, yaitu jumlah kuadrat selisih antara nilai target aktual dan nilai rata-rata target.
+Output pada global_metrics:
+* "count_hits_at_7" adalah jumlah item yang direkomendasikan dan diterima oleh pengguna sebanyak 7 item.
+* "count_hits_at_15" adalah jumlah item yang direkomendasikan dan diterima oleh pengguna sebanyak 15 item.
+* "interacted_count" adalah jumlah item yang benar-benar diterima oleh pengguna.
+*  "recall_at_7" adalah rasio antara "recall_at_7" dan "interacted_count", yang menunjukkan seberapa baik sistem direkomendasikan item yang sebenarnya diterima oleh pengguna. 
+*  "recall_at_15" adalah rasio antara "recall_at_15" dan "interacted_count", yang menunjukkan seberapa baik sistem direkomendasikan item yang sebenarnya diterima oleh pengguna.
 
-Metrik ini mengukur seberapa baik model regresi menjelaskan variasi dari target (tarif pesawat). Nilai R2_Score berkisar antara 0 dan 1, dimana nilai 1 menunjukkan model regresi yang sempurna dan nilai 0 menunjukkan model regresi yang buruk. Dalam hal prediksi tarif pesawat, nilai R2_Score yang tinggi menunjukkan bahwa model regresi memiliki kemampuan yang baik dalam memprediksi tarif pesawat.
+#### Content Based Filtering
 
-Dengan menggunakan metrik R2_Score tersebut di dapatkan hasil dari 3 modelling :
+|Index |  count_hits_at_7|	count_hits_at_15|	interacted_count	|recall_at_7	|recall_at_15|	person_id |
+|---	|---		 |---			|---				|---		|---		|---		|
+|55	|32		|53			|192				|0.166667	|0.276042	|3609194402293569455|
+|63	|41		|54			|134				|0.305970	|0.402985	|-2626634673110551643|
+|16	|18		|37			|130				|0.138462	|0.284615	|-1032019229384696495|
 
-| Model	|  train 	|  test 	|
-|---	|---		|---		|
-|KNN   	|0.798497   	|0.624805   	|
-|RF   	|0.941121   	|0.825389   	|
-|DTR   	|0.972591   	|0.737278   	|
+Tabel 3. global_metric Content Based Filtering
 
-Tabel 3. Metrik R2_Score
+Pada tabel 3 di tampilkan beberapa sampel untuk membandingkan atribut- atribut dari _global metric_ terhadap user dengan menggunakan model _Content Based Filtering_
 
-Pada tabel 3 dapat diketahui bahwa model dengan r2_score tertinggi untuk data _training_ dan data _test_ adalah model _Random Forest Regressor_ Sedangkan model dengan r2_score terendah untuk data _training_ dan data _test_ adalah _KNN_  
+#### Colaboratorive Filtering
 
-![plot r2_score](https://raw.githubusercontent.com/Awangnugrawan/Predictive-Analysis-and-Review/main/plot_R2_SCORE.jpg)
+|Index |  count_hits_at_7|	count_hits_at_15|	interacted_count	|recall_at_7	|recall_at_15|	person_id |
+|---	|---		 |---			|---				|---		|---		|---		|
+|55	|22		|39			|192				|0.114583	|0.203125	|3609194402293569455	|
+|63	|16		|35			|134				|0.119403	|0.261194	|-2626634673110551643|
+|16	|23		|41			|130				|0.176923	|0.315385	|-1032019229384696495|
 
-Gambar 2. Plot R2 Score
+Tabel 4. global_metric Colaborative Filtering
 
-Pada gambar 2 dapat dilihat bahwa urutan model dari yang terbaik ke terburuk adalah RF , DTR , dan KNN
+Pada tabel 4 dengan menggunakan model _Colaborative Filtering_ di tampilkan beberapa sampel untuk membandingkan atribut - atribut dari _global metric_ terhadap user 
 
+#### Perbandingan Content Based Filtering dan Colaborative Filtering
 
-2. Mean Square Error
+| modelName		|  recall_at_7	|  recall_at_15 |
+|---			|---		|---		|
+|Content-Based  	|0.215506  	|0.345072  	|
+|Collaborative Filtering|0.397766   	|0.551248  	|
 
-Mean Squared Error (MSE) adalah metrik yang digunakan untuk mengukur kualitas model regresi. 
-Formula MSE adalah:
+Tabel 5. Perbandingan 2 model
 
-$$ MSE = {Σ * (yi - ŷi)^2 \over n} $$
-
-ket:
-- n adalah jumlah data
-- yi adalah nilai target aktual
-- ŷi adalah nilai target prediksi
-- Σ (yi - ŷi)^2 adalah jumlah kuadrat selisih antara nilai target aktual dan nilai target prediksi
-
-Metrik ini mengukur rata-rata kuadrat selisih antara nilai target aktual (tarif pesawat) dan nilai target prediksi. Semakin kecil nilai MSE, semakin baik model regresi dalam memprediksi tarif pesawat. Dalam hal prediksi tarif pesawat, model regresi dengan MSE yang lebih kecil akan dianggap memiliki performa yang lebih baik dibandingkan dengan model yang memiliki MSE yang lebih besar.
-
-Dengan menggunakan metrik Mean Square Error tersebut di dapatkan hasil dari 3 modelling:
-
-| Model	|  train 	|  test 	|
-|---	|---		|---		|
-|KNN   	|4186.297999   	|8712.025152   	|
-|RF   	|1223.235661   	|4054.469   	|
-|DTR   	|569.42498   	|6100.403468   	|
-
-Tabel 4 Metrik Mean Square Error
-
-Pada tabel tersebut model yang memiliki _error_ yang tinggi adalah _KNN_ dan model yang memiliki _error_ terendah adalah _RF_
-
-![plot MSE](https://raw.githubusercontent.com/Awangnugrawan/Predictive-Analysis-and-Review/main/PLOT%20MSE.jpg)
-
-Gambar 3. PLOT MSE
-
-Berdasarkan hasil plot pada gambar 3 urutan model yang memiliki error sedikit ke terbanyak adalah _RF_ , _DTR_ , dan _KNN_
+Pada tabel 5 berdasarkan hasil perbandingan tersebut model Content Based Filtering menghasilkan recall yang lebih rendah pada recall_at_7 dan recall_at_15 
 
 
-3. Mean Absolute Error
 
-Mean Absolute Error (MAE) adalah metrik yang digunakan untuk mengukur kualitas model regresi. 
-Formula MAE adalah:
+Gambar 1. Plot Recall Content Based Filtering dan Colaborative Filtering
 
-$$ MAE = {Σ * |yi - ŷi| \over n} $$
+Pada gambar tersebut terlihat plot hasil recall pada kedua model dan dapat diketahui bahwa Colaborative Filtering memiliki score recall_at_7 dan recall_at_15 lebih tinggi dibandingkan model Content Based Filtering
 
-ket:
-- n adalah jumlah data
-- yi adalah nilai target aktual
-- ŷi adalah nilai target prediksi
-- Σ |yi - ŷi| adalah jumlah absolute selisih antara nilai target aktual dan nilai target prediksi
-
-Metrik ini mengukur rata-rata selisih antara nilai target aktual (tarif pesawat) dan nilai target prediksi. Semakin kecil nilai MAE, semakin baik model regresi dalam memprediksi tarif pesawat. Dalam hal prediksi tarif pesawat, model regresi dengan MAE yang lebih kecil akan dianggap memiliki performa yang lebih baik dibandingkan dengan model yang memiliki MAE yang lebih besar.
-
-Dengan menggunakan metrik Mean Absolute Error tersebut di dapatkan hasil dari 3 modelling :
-
-| Model	|  train 	|  test 	|
-|---	|---		|---		|
-|KNN   	|1.24639   	|1.799676   	|
-|RF   	|0.690195   	|1.236153   	|
-|DTR   	|0.296922   	|1.440906   	|
-
-Tabel 5. Metrik Mean Absolute Error
-
-Pada tabel 5 sama seperti MSE model yang memiliki _error_ yang tinggi adalah _KNN_ dan model yang memiliki _error_ terendah adalah _RF_
-
-![plot MAE](https://raw.githubusercontent.com/Awangnugrawan/Predictive-Analysis-and-Review/main/Plot%20MAE.jpg)
-
-Gambar 4. PLOT MAE
-
-Berdasarkan gambar 4 dan dari ketiga plot metrik dapat disimpulkan bahwa model _Random Forest Regression_ adalah model yang terbaik
-
+Sehingga dapat disimpulkan pada article recomendation ini model Colaborative Filtering lebih baik dari model Content Based Filtering melalui evaluasi Top-N accuracy metrics dengan membandingkan hasil recall kedua model tersebut.
 
 
 Referensi:
-Wang, T., Pouyanfar, S., Tian, H., Tao, Y., Alonso, M., Luis, S., & Chen, S. C. (2019, July). A framework for airfare price prediction: a machine learning approach. In 2019 IEEE 20th international conference on information reuse and integration for data science (IRI) (pp. 200-207). IEEE.
+Wang, Xuejian, et al. "Dynamic attention deep model for article recommendation by learning human editors' demonstration." Proceedings of the 23rd acm sigkdd international conference on knowledge discovery and data mining. 2017.
 
 **---Ini adalah bagian akhir laporan---**
