@@ -6,6 +6,9 @@ Namun, dengan banyaknya informasi yang tersedia, seringkali menimbulkan kesulita
 pengguna harus menelusuri berbagai sumber dan membaca banyak artikel sebelum menemukan yang mereka butuhkan. Ini dapat menjadi proses yang memakan waktu 
 dan membosankan. Oleh karena itu, diperlukan sistem yang mampu membantu pengguna dalam menemukan artikel yang sesuai dengan kebutuhan mereka dengan cepat dan efisien.
 
+Sebagai agregator, portal berita online menghadapi tantangan besar dalam memilih secara cermat kumpulan artikel yang
+akan ditampilkan kepada para penggunanya. Biasanya, artikel artikel kandidat tersebut direkomendasikan secara manual oleh editor platform dari kumpulan artikel yang jauh lebih besar yang dikumpulkan dari berbagai sumber. Proses pemilihan manual seperti itu membutuhkan banyak tenaga dan waktu. 
+
 Sistem recomendasi artikel memainkan peran penting dalam membantu pengguna menemukan artikel yang relevan dan terpercaya. Sistem ini menggunakan algoritma untuk 
 menganalisis data seperti preferensi pengguna, tipe artikel yang dicari, dan interaksi sebelumnya dengan artikel lain. Berdasarkan analisis ini, sistem memberikan 
 rekomendasi artikel yang  sesuai dengan kebutuhan pengguna. Ini dapat membantu pengguna menemukan informasi yang mereka cari dengan lebih cepat dan mudah.
@@ -44,9 +47,7 @@ Menjelaskan tujuan dari pernyataan masalah:
 
 
 ## Data Understanding
-Dataset yang digunakan pada laporan ini berisi informasi tentang aktivitas pengguna dalam berbagi dan membaca artikel. Data ini diambil dari Deskdrop, sebuah platform internal 
-untuk berbagi artikel bagi tim CI&T. Dataset ini berisi informasi tentang pengguna, artikel yang dibagikan dan dibaca, dan waktu aktivitas. Ini dapat digunakan untuk membuat sistem 
-rekomendasi artikel yang memberikan rekomendasi artikel berdasarkan preferensi pengguna dan perilaku sebelumnya.Dataset ini terdiri dari dua file csv yaitu Shared_articles dan Users_interactions
+Dataset yang digunakan pada laporan ini berisi informasi tentang aktivitas pengguna dalam berbagi dan membaca artikel. Data ini diambil dari Deskdrop, sebuah platform internal  untuk berbagi artikel bagi tim CI&T. Dataset ini berisi informasi tentang pengguna, artikel yang dibagikan dan dibaca, dan waktu aktivitas. Ini dapat digunakan untuk membuat sistem  rekomendasi artikel yang memberikan rekomendasi artikel berdasarkan preferensi pengguna dan perilaku sebelumnya.Dataset ini terdiri dari dua file csv yaitu Shared_articles dan Users_interactions
 [Kaggle Repository](https://www.kaggle.com/datasets/gspmoreira/articles-sharing-reading-from-cit-deskdrop)
 
 ### Variabel-variabel pada Articles sharing and reading from CI&T DeskDrop Kaggle Dataset adalah sebagai berikut:
@@ -137,6 +138,7 @@ Teknik yang digunakan pada notebook secara berurutan :
 
 Terdapat 5 jenis interaksi, selanjutnya adalah dengan memberikan bobot tergantung pada jenis interaksinya
 Memmbuat dictionary untuk menampung masing-masing bobot eventType:
+
 	- 'COMMENT CREATED': 5
 	- 'FOLLOW': 4
 	- 'BOOKMARK': 3
@@ -242,7 +244,7 @@ Tabel 5. Perbandingan 2 model
 
 Pada tabel 5 berdasarkan hasil perbandingan tersebut model Content Based Filtering menghasilkan recall yang lebih rendah pada recall_at_7 dan recall_at_15 
 
-
+![plot CBF DAN CF](https://raw.githubusercontent.com/Awangnugrawan/Article-recomendation-and-Review/main/plot%20CBF%20dan%20CF.jpg)
 
 Gambar 1. Plot Recall Content Based Filtering dan Colaborative Filtering
 
