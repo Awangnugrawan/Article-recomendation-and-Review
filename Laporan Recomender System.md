@@ -139,11 +139,11 @@ Teknik yang digunakan pada notebook secara berurutan :
 Terdapat 5 jenis interaksi, selanjutnya adalah dengan memberikan bobot tergantung pada jenis interaksinya
 Memmbuat dictionary untuk menampung masing-masing bobot eventType:
 
-	- 'COMMENT CREATED': 5
-	- 'FOLLOW': 4
-	- 'BOOKMARK': 3
-	- 'LIKE': 2
-	- 'VIEW': 1
+- 'COMMENT CREATED': 5
+- 'FOLLOW': 4
+- 'BOOKMARK': 3
+- 'LIKE': 2
+- 'VIEW': 1
 	
 - Handling User cold-star
 
